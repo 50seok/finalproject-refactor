@@ -61,8 +61,8 @@ public class KakaoController {
             // 파라미터 4개를 만들어서 스트림을 통해 보내면 된다.
             StringBuffer sb = new StringBuffer();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=45360f73f863670b5f6cfb33bf1fa775");
-            sb.append("&redirect_uri=https://final-100.p-e.kr/kakao/login");
+            sb.append("&client_id=" + System.getenv().getOrDefault("KAKAO_CLIENT_ID", "01fcedff33d5020339523392547b5f9b"));
+            sb.append("&redirect_uri=" + System.getenv().getOrDefault("KAKAO_REDIRECT_URI", "http://localhost:8080/kakao/login"));
             sb.append("&code=" + code);
 
             // 전달하고자하는 파라미터들을 보낼 outputstream을 준비

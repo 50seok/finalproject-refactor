@@ -188,7 +188,7 @@
         <jsp:include page="../main/mainF.jsp"></jsp:include>
         <!--////////// Foter end //////////////-->
         <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eedecff808e53f9bd6b2000c4b6da49a&libraries=services"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10b35fbf759effd509a13d5148feabfa&libraries=services"></script>
         <script>
             
             var markers =[];//마커 배열

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <!DOCTYPE html>
   <html>
@@ -299,7 +299,7 @@
 
   </body>
   <script type="text/javascript"
-    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eedecff808e53f9bd6b2000c4b6da49a&libraries=services"></script>
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10b35fbf759effd509a13d5148feabfa&libraries=services"></script>
    <script>
     function conf() {
      if (confirm("위치 기반 서비스를 이용하여 현재위치를 조회하시겠습니까?")) {
