@@ -549,7 +549,7 @@ SELECT * FROM (
           <when test="searchType == 9">
             AND s_idx IN 
               (SELECT s_idx FROM service_t WHERE s_idx IN 
-                (SELECT s_idx FROM service_write WHERE m_idx = ${searchValue}))
+                (SELECT s_idx FROM service_write WHERE m_idx = #{searchValue}))
           </when>
         </choose>
       </if>
@@ -605,7 +605,7 @@ SELECT COUNT(*) FROM charging.service_use
           <when test="searchType == 9">
             AND s_idx IN 
               (SELECT s_idx FROM service_t WHERE s_idx IN 
-                (SELECT s_idx FROM service_write WHERE m_idx = ${searchValue}))
+                (SELECT s_idx FROM service_write WHERE m_idx = #{searchValue}))
           </when>
         </choose>
       </if>

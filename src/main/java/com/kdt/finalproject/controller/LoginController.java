@@ -22,9 +22,6 @@ public class LoginController {
     @Autowired
     private LoginService ls;
 
-    @Autowired
-    private HttpSession session;
-
     @GetMapping("login")
     public String login() {
         return "/login/login";
@@ -52,26 +49,24 @@ public class LoginController {
 
     @PostMapping("/reqLogin")
     @ResponseBody
-
-    public Map<String, Object> login(MemVO vo) {
+    public Map<String, Object> login(MemVO vo, HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
 
-        // // 사용자가 입력한 id를 가지고 DB로부터 MemVO 객체를 검색한다.
         MemVO mvo = ls.login(vo);
-
-        // System.out.println(mvo + "MVO");
 
         if (mvo != null) {
             session.setAttribute("mvo", mvo);
             response.put("success", "1");
+        } else {
+            response.put("success", "0");
         }
 
         return response;
     }
 
     @RequestMapping("logout")
-    public ModelAndView logout() {
+    public ModelAndView logout(HttpSession session) {
         ModelAndView mv = new ModelAndView();
         session.removeAttribute("mvo");
         mv.setViewName("redirect:/main/");

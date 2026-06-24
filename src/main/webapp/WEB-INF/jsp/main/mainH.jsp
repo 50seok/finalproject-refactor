@@ -110,81 +110,153 @@
    <!--////////// Header end ////////////-->
    <script type="text/javascript"
     src="//dapi.kakao.com/v2/maps/sdk.js?appkey=10b35fbf759effd509a13d5148feabfa&libraries=services"></script>
+  <!-- GPS 로딩 메시지 -->
+  <div id="gps-loading-msg" style="display:none; position:fixed; top:80px; left:50%; transform:translateX(-50%);
+   background:#00c8c8; color:#fff; padding:10px 24px; border-radius:20px; z-index:9999; font-size:0.9rem;">
+   📍 위치를 가져오는 중입니다...
+  </div>
+
+  <!-- GPS 차단 안내 모달 -->
+  <div class="modal fade" id="gpsGuideModal" tabindex="-1" aria-labelledby="gpsGuideModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+     <div class="modal-header" style="background-color:#00c8c8; color:#fff;">
+      <h5 class="modal-title" id="gpsGuideModalLabel">📍 위치 권한 허용이 필요합니다</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+     </div>
+     <div class="modal-body">
+      <p>충전소 찾기 기능은 <strong>브라우저 위치 권한</strong>이 필요합니다.<br>현재 위치 접근이 차단되어 있습니다.</p>
+      <hr>
+      <div id="gps-chrome-guide">
+       <p><strong>🔵 Chrome 설정 방법</strong></p>
+       <ol>
+        <li>주소창 왼쪽 <strong>🔒 자물쇠 아이콘</strong> 클릭</li>
+        <li><strong>사이트 설정</strong> 선택</li>
+        <li><strong>위치</strong> → <strong>허용</strong> 으로 변경</li>
+        <li>페이지 새로고침 후 다시 시도</li>
+       </ol>
+      </div>
+      <div id="gps-firefox-guide" style="display:none;">
+       <p><strong>🦊 Firefox 설정 방법</strong></p>
+       <ol>
+        <li>주소창 왼쪽 <strong>🔒 자물쇠 아이콘</strong> 클릭</li>
+        <li><strong>연결 보안 → 추가 정보</strong></li>
+        <li><strong>권한 탭</strong>에서 위치 → <strong>허용</strong></li>
+        <li>페이지 새로고침 후 다시 시도</li>
+       </ol>
+      </div>
+      <p class="text-muted mt-2" style="font-size:0.85rem;">
+       ※ 로컬(http) 환경에서는 Chrome 주소창에<br>
+       <code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code><br>
+       입력 후 <code>http://localhost:8080</code> 추가하면 테스트 가능합니다.
+      </p>
+     </div>
+     <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      <button type="button" class="btn" style="background-color:#00c8c8; color:#fff;"
+       onclick="submitWithDefaultCity()">서울 기준으로 조회</button>
+     </div>
+    </div>
+   </div>
+  </div>
+
    <script>
+    function submitWithDefaultCity() {
+     var form = document.createElement('form');
+     form.setAttribute('method', 'post');
+     form.setAttribute('action', '/fmap/');
+     form.style.display = 'none';
+     var input = document.createElement('input');
+     input.setAttribute('type', 'hidden');
+     input.setAttribute('name', 'city');
+     input.setAttribute('value', '서울특별시');
+     form.appendChild(input);
+     document.body.appendChild(form);
+     form.submit();
+    }
+
+    function showGpsGuideModal(errorCode) {
+     var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+     if (isFirefox) {
+      document.getElementById('gps-chrome-guide').style.display = 'none';
+      document.getElementById('gps-firefox-guide').style.display = 'block';
+     }
+     var modal = new bootstrap.Modal(document.getElementById('gpsGuideModal'));
+     modal.show();
+    }
+
+    var _gpsModalShown = false;
+    var _gpsFallbackTimer = null;
+
+    function _showGpsModalOnce(code) {
+     if (_gpsModalShown) return;
+     _gpsModalShown = true;
+     if (_gpsFallbackTimer) { clearTimeout(_gpsFallbackTimer); _gpsFallbackTimer = null; }
+     document.getElementById('gps-loading-msg').style.display = 'none';
+     showGpsGuideModal(code);
+    }
+
     function conf() {
-     
      if (confirm("위치 기반 서비스를 이용하여 현재위치를 조회하시겠습니까?")) {
       johoe();
      } else {
       alert("현재위치를 조회해주세요.");
      }
     }
+
     function johoe() {
+     _gpsModalShown = false;
+     document.getElementById('gps-loading-msg').style.display = 'block';
+
+     // HTTP 환경에서 콜백 미호출 대비 5초 폴백
+     _gpsFallbackTimer = setTimeout(function() {
+      _showGpsModalOnce(1);
+     }, 5000);
 
      var geocoder = new kakao.maps.services.Geocoder();
-     // HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
      if (navigator.geolocation) {
-
-      // GeoLocation을 이용해서 접속 위치를 얻어옵니다
-      navigator.geolocation.getCurrentPosition(function (position) {
-       //위도경도를 불러온다.
-       var lati = position.coords.latitude, // 위도
-        lon = position.coords.longitude; // 경도 -->
-       getAddr(lati, lon);
-       //주소를 불러오는 함수
-       function getAddr(lati, lon) {
-        let geocoder2 = new kakao.maps.services.Geocoder();
-
-        let coord = new kakao.maps.LatLng(lati, lon);
-
-        let callback = function (result, status) {
-
+      navigator.geolocation.getCurrentPosition(
+       function (position) {
+        if (_gpsFallbackTimer) { clearTimeout(_gpsFallbackTimer); _gpsFallbackTimer = null; }
+        document.getElementById('gps-loading-msg').style.display = 'none';
+        var lati = position.coords.latitude;
+        var lon = position.coords.longitude;
+        var geocoder2 = new kakao.maps.services.Geocoder();
+        var coord = new kakao.maps.LatLng(lati, lon);
+        geocoder2.coord2Address(coord.getLng(), coord.getLat(), function (result, status) {
          if (status === kakao.maps.services.Status.OK) {
-
-          //console.log(result);
           var city = result[0].address.address_name;
-          //console.log(result[0].road_address.address_name);
-          //console.log(city+"/1번");
-          geocoder.addressSearch(result[0].address.address_name, function (result, status) {
-
-           //console.log(city+"/2번");
-           //정상적으로 검색이 완료됐다면.....
+          geocoder.addressSearch(city, function (result, status) {
            if (status === kakao.maps.services.Status.OK) {
-            // 강제 전송 코드
             var form = document.createElement('form');
             form.setAttribute('method', 'post');
             form.setAttribute('action', '/fmap/');
             form.style.display = 'none';
-
-            var cityInput3 = document.createElement('input');
-            cityInput3.setAttribute('type', 'hidden');
-            cityInput3.setAttribute('name', 'city');
-            cityInput3.setAttribute('value', city);
-            
-            form.appendChild(cityInput3);
-
+            var cityInput = document.createElement('input');
+            cityInput.setAttribute('type', 'hidden');
+            cityInput.setAttribute('name', 'city');
+            cityInput.setAttribute('value', city);
+            form.appendChild(cityInput);
             document.body.appendChild(form);
-            
             form.submit();
+           } else {
+            _showGpsModalOnce(0);
            }
           });
-
+         } else {
+          _showGpsModalOnce(0);
          }
-        }
-        geocoder2.coord2Address(coord.getLng(), coord.getLat(), callback);
-       }
-      });
-     } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
-
-      var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
-
-       message = 'geolocation을 사용할수 없어요..'
-
-      displayMarker(locPosition, message);
+        });
+       },
+       function (error) {
+        _showGpsModalOnce(error.code);
+       },
+       { timeout: 8000, enableHighAccuracy: false }
+      );
+     } else {
+      _showGpsModalOnce(2);
      }
-
     }
-
    </script>
   </body>
 

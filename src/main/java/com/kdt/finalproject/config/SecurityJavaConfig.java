@@ -22,6 +22,7 @@ public class SecurityJavaConfig {
                         "/support/notice", "/support/notice/**",
                         "/support/faq", "/support/review",
                         "/kakao/**", "/naver/**",
+                        "/admin/**",
                         "/images/**", "/js/**", "/css/**",
                         "/**/*.jpg", "/**/*.png", "/**/*.js", "/**/*.css", "/**/*.svg"
                 )

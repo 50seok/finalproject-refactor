@@ -44,9 +44,6 @@ public class AdminController {
     @Autowired
     private ServletContext application; // 파일첨부 시 경로를 절대경로화 시키기 위해 필요
 
-    @Autowired
-    HttpSession session;
-
     private String bbs_upload = "/bbs_upload";
     private String editor_path = "/editor_upload";
 
@@ -498,7 +495,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/login")
-    public ModelAndView login(MemVO vo) {
+    public ModelAndView login(MemVO vo, HttpSession session) {
         ModelAndView mv = new ModelAndView();
 
         String path;
@@ -517,11 +514,9 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/logout")
-    public String admin_logout() {
-
-        session.removeAttribute("mvo");
-
-        return "/admin/login";
+    public String admin_logout(HttpSession session) {
+        session.removeAttribute("amvo");
+        return "redirect:/admin/login";
     }
 
     @RequestMapping("/admin/car")
@@ -555,8 +550,16 @@ public class AdminController {
         ModelAndView mv = new ModelAndView();
 
         SuseVO suvo = service.car_vo(su_idx);
+        if (suvo == null) {
+            mv.setViewName("redirect:/admin/car");
+            return mv;
+        }
 
         SuseVO[] ar = service.car_view(suvo.getSu_val5());
+        if (ar == null || ar.length == 0) {
+            mv.setViewName("redirect:/admin/car");
+            return mv;
+        }
 
         String now = ar[ar.length - 1].getSu_status();
 
@@ -674,12 +677,12 @@ public class AdminController {
     }
 
     @RequestMapping("/admin/car_status")
-    public ModelAndView car_status(String su_idx, String su_status) {
+    public ModelAndView car_status(String su_idx, String su_status, HttpSession session) {
         ModelAndView mv = new ModelAndView();
 
         MemVO mvo = null;
-        if (session.getAttribute("mvo") != null) {
-            mvo = (MemVO) session.getAttribute("mvo");
+        if (session.getAttribute("amvo") != null) {
+            mvo = (MemVO) session.getAttribute("amvo");
         }
 
         SuseVO vo = service.car_vo(su_idx); // val5 가져오기

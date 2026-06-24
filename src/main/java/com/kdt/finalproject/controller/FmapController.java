@@ -10,15 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.print.DocFlavor.STRING;
-
-import org.apache.ibatis.annotations.Param;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,14 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kdt.finalproject.service.LoginService;
 import com.kdt.finalproject.vo.ChargeVO;
 import com.kdt.finalproject.vo.MemVO;
 
 @Controller
 public class FmapController {
 
-    private String key = "bJ6oLO1YEYJbMWFVcv7pnkobUWW2bUmlGcVWx51o2%2FlRzzNbNqBpgrnzy0DR2yBMEwybwKRo1LYNbEUZJGHF6A%3D%3D";
+    private String key = System.getenv().getOrDefault("CHARGING_API_KEY", "EjMxyUf8WVGI20O08ZfgO8T3SoyKc1Y60RL817rs");
 
     // 메인에서 위치를 받은 경우 맵에 뿌려줄 충전소api
     @RequestMapping("/fmap/")
@@ -41,9 +32,12 @@ public class FmapController {
         System.out.println("////////////////////////////111");
         ModelAndView mv = new ModelAndView();
 
-        // 한전공공api :
-        // http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList?serviceKey=bJ6oLO1YEYJbMWFVcv7pnkobUWW2bUmlGcVWx51o2%2FlRzzNbNqBpgrnzy0DR2yBMEwybwKRo1LYNbEUZJGHF6A%3D%3D&pageNo=1&numOfRows=10&addr=%EC%84%9C%EC%9A%B8%ED%8A%B9%EB%B3%84%EC%8B%9C
-        // 한전 에너지센터 : https://bigdata.kepco.co.kr/openapi/v1/EVcharge.do
+        if (city == null || city.trim().isEmpty()) {
+            city = "서울특별시";
+        }
+
+        // 한전 빅데이터 EV충전소 API (JSON)
+        // https://bigdata.kepco.co.kr/openapi/v1/EVcharge.do
         System.out.println(city);
         String two = city.substring(0, 2);
         if (two.equals("충남") || two.equals("충북")) {
@@ -53,55 +47,58 @@ public class FmapController {
         } else if (two.equals("경남") || two.equals("경북")) {
             two = "경상";
         }
+
         StringBuffer sb = new StringBuffer();
-        sb.append("http://openapi.kepco.co.kr/service/EvInfoServiceV2/getEvSearchList");
-        sb.append("?serviceKey=" + key);
-        sb.append("&pageNo=1");
+        sb.append("https://bigdata.kepco.co.kr/openapi/v1/EVcharge.do");
+        sb.append("?apiKey=" + key);
+        sb.append("&returnType=json");
         sb.append("&numOfRows=800");
+        sb.append("&pageNo=1");
         sb.append("&addr=" + URLEncoder.encode(two, "UTF-8"));
 
         URL url = new URL(sb.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("Accept", "application/json");
         conn.connect();
 
-        SAXBuilder builder = new SAXBuilder();
-        Document doc = builder.build(conn.getInputStream());
-        Element root = doc.getRootElement();
-        Element body = root.getChild("body");
-        Element items = body.getChild("items");
-        List<Element> list = items.getChildren("item");
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode root = objectMapper.readTree(conn.getInputStream());
+        JsonNode items = root.path("result");
 
-        ChargeVO[] ar = new ChargeVO[list.size()];
-
-        int i = 0;
-        for (Element e : list) {
-
-            String addr = e.getChildText("addr"); // 충전소
-            String chargeTp = e.getChildText("chargeTp"); // 충전기 타입
-            String cpId = e.getChildText("cpId"); // 충전기 id
-            String cpNm = e.getChildText("cpNm"); // 충전기 명칭
-            String cpStat = e.getChildText("cpStat"); // 충전기 상태코드
-            String csNm = e.getChildText("csNm"); // 충전소 명칭
-            String lat = e.getChildText("lat"); // 위도
-            String longi = e.getChildText("longi"); // 경도
-            String cpTp = e.getChildText("cpTp"); // 충전방식
-            String csId = e.getChildText("csId"); // 충전소 id
-            String statUpdateDatetime = e.getChildText("statUpdateDatetime"); // 충전기 상태 갱신 시각 id
-
-            ChargeVO vo = new ChargeVO(addr, chargeTp, cpId, cpNm, cpStat, cpTp, csId, csNm, lat, longi,
-                    statUpdateDatetime);
-
-            ar[i++] = vo;
-
+        List<ChargeVO> chargeList = new ArrayList<>();
+        if (items.isArray()) {
+            for (JsonNode e : items) {
+                ChargeVO vo = new ChargeVO(
+                    e.path("addr").asText(""),
+                    e.path("chargeTp").asText(""),
+                    e.path("cpId").asText(""),
+                    e.path("cpNm").asText(""),
+                    e.path("cpStat").asText(""),
+                    e.path("cpTp").asText(""),
+                    e.path("csId").asText(""),
+                    e.path("csNm").asText(""),
+                    e.path("lat").asText(""),
+                    e.path("longi").asText(""),
+                    e.path("statUpdateDatetime").asText("")
+                );
+                chargeList.add(vo);
+            }
         }
 
-        Arrays.sort(ar, new Comparator<ChargeVO>() {
-            @Override
-            public int compare(ChargeVO c1, ChargeVO c2) {
-                return Integer.compare(Integer.parseInt(c1.getCsId()), Integer.parseInt(c2.getCsId()));
-            }
+        ChargeVO[] ar = chargeList.toArray(new ChargeVO[0]);
 
-        });
+        if (ar.length > 0) {
+            Arrays.sort(ar, new Comparator<ChargeVO>() {
+                @Override
+                public int compare(ChargeVO c1, ChargeVO c2) {
+                    try {
+                        return Integer.compare(Integer.parseInt(c1.getCsId()), Integer.parseInt(c2.getCsId()));
+                    } catch (NumberFormatException e) {
+                        return c1.getCsId().compareTo(c2.getCsId());
+                    }
+                }
+            });
+        }
 
         for (int x = 0; x < ar.length; x++) {
             for (int y = 0; y < ar.length; y++) {
@@ -130,7 +127,7 @@ public class FmapController {
     public Map<String, Object> searchFestival2(String lati3, String lon3, String lati2, String lon2) throws Exception {
         Map<String, Object> map = new HashMap<>();
         System.out.println("/////////////////////11");
-        String apiKey = "f7b7653182e4c0612dac5e8cd9ea9c19";
+        String apiKey = System.getenv().getOrDefault("KAKAO_REST_API_KEY", "f7b7653182e4c0612dac5e8cd9ea9c19");
         StringBuffer sb = new StringBuffer();
         sb.append("https://apis-navi.kakaomobility.com/v1/directions");
         sb.append("?priority=RECOMMEND");

@@ -24,17 +24,17 @@
 
    
 
-   <select id="login" parameterType="Map"
+   <select id="login" parameterType="com.kdt.finalproject.vo.MemVO"
 		resultType="com.kdt.finalproject.vo.MemVO">
 		SELECT * FROM member_t
 		WHERE m_email = #{m_email}
-		AND m_status = 0 AND m_class = #{m_class}
+		AND m_status = 0
 	</select>
 
 	<!--카카오-->
 	<insert id="add_kakao" parameterType="com.kdt.finalproject.vo.MemVO">
 	INSERT INTO member_t(m_email, m_pw, m_name, m_atoken, m_rtoken, m_date, m_status, m_class)
-	VALUES(#{m_email}, #{m_pw}, #{m_name}, #{m_atoken}, #{m_atoken}, NOW(), 0, 0)
+	VALUES(#{m_email}, #{m_pw}, #{m_name}, #{m_atoken}, #{m_rtoken}, NOW(), 0, 0)
 	</insert>
 
 

@@ -10,6 +10,7 @@ import java.net.URL;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,11 +26,14 @@ public class NaverController {
     @Autowired
     private LoginService ls;
 
-    @Autowired
-    private HttpSession session;
+    @Value("${naver.client-id}")
+    private String naverClientId;
+
+    @Value("${naver.client-secret}")
+    private String naverClientSecret;
 
     @RequestMapping("/naver/login")
-    public ModelAndView naverLogin(String code, String state) {
+    public ModelAndView naverLogin(String code, String state, HttpSession session) {
         // 카카오 서버에서 인증코드를 전달해 주는 곳이며 여기서
         // 코드(토큰) 값을 받아야 두번째 호출을 할 수 있는 것이다.
         ModelAndView mv = new ModelAndView();
@@ -59,8 +63,8 @@ public class NaverController {
             // 파라미터 4개를 만들어서 스트림을 통해 보내면 된다.
             StringBuffer sb = new StringBuffer();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=XmayIwrMRA3sOwu2hTor");
-            sb.append("&client_secret=vjKVBFhI4M");
+            sb.append("&client_id=" + naverClientId);
+            sb.append("&client_secret=" + naverClientSecret);
             sb.append("&code=" + code);
             sb.append("&state=" + state);
 
