@@ -1,5 +1,18 @@
 HELP.md
 target/
+
+### 환경변수 ###
+.env
+.env.local
+.env.*.local
+
+### 업로드 파일 ###
+src/main/webapp/editor_upload/**
+!src/main/webapp/editor_upload/.gitkeep
+
+### 민감 파일 ###
+*.xlsx
+.DS_Store
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

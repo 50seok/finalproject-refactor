@@ -16,9 +16,15 @@ public class SecurityJavaConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/", "/reg", "/login", "/reqLogin", "/main/", "/join", "/**/*.jpg", "/**/*.png",
-                        "/support/notice", "/**/**",
-                        "/**/*.js", "/fmap")
+                .antMatchers(
+                        "/", "/reg", "/login", "/reqLogin", "/main/", "/join",
+                        "/infoma/", "/fmap/**", "/map/**",
+                        "/support/notice", "/support/notice/**",
+                        "/support/faq", "/support/review",
+                        "/kakao/**", "/naver/**",
+                        "/images/**", "/js/**", "/css/**",
+                        "/**/*.jpg", "/**/*.png", "/**/*.js", "/**/*.css", "/**/*.svg"
+                )
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
