@@ -21,6 +21,36 @@
             bottom: 0;
             left: 0;
             right: 0;
+            background-color: #0d1117;
+            border-top: 1px solid #21262d;
+        }
+
+        footer a {
+            color: #6e7681 !important;
+            text-decoration: none !important;
+            transition: color 0.2s;
+        }
+        footer a:hover {
+            color: #8b949e !important;
+        }
+
+        footer span {
+            color: #484f58;
+            font-size: 0.85rem;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 20px 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
         }
     </style>
 </head>
@@ -29,13 +59,13 @@
     <body class="pb-2">
         <!--////////// Foter start //////////////-->
         <div class="container-fluid">
-            <footer class="border-top">
-                <div class="my-4">
-                    <div class="my-2">
-                        <a class="mx-5" >법적고지</a>
-                        <a>개인정보처리방침</a><br>
+            <footer>
+                <div class="container footer-inner">
+                    <div class="footer-links">
+                        <a>법적고지</a>
+                        <a>개인정보처리방침</a>
                     </div>
-                    <span class="ml-5 mx-5">서울 관악구 시흥대로 552 석천빌딩 &nbsp;&nbsp;&nbsp;02-869-1080 &nbsp;&nbsp;&nbsp;©2023 RAM쥐Company, 그의 천둥을 조심해!</span>
+                    <span>서울 관악구 시흥대로 552 석천빌딩 &nbsp;&nbsp;02-869-1080 &nbsp;&nbsp;©2023 RAM쥐Company</span>
                 </div>
             </footer>
         </div>

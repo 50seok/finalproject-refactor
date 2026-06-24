@@ -6,80 +6,129 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Insert title here</title>
+    <title>로그인</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
-
-
-        /* 선택된 탭의 글씨 색상 */
-        .nav-link.active#tab-personal {
-            color: #ffffff !important;
+        body {
+            background-color: #0d1117 !important;
         }
 
-        /* 선택된 탭의 글씨 색상 */
+        /* 탭 pills */
+        .nav-link.active#tab-personal,
         .nav-link.active#tab-business {
-            color: #ffffff !important;
+            color: #00e5b4 !important;
+            background-color: #1c2128 !important;
+            border: 1px solid #30363d !important;
         }
-
+        .nav-pills .nav-link {
+            color: #8b949e;
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+        }
+        .nav-pills .nav-link:hover {
+            color: #00e5b4;
+            background-color: #1c2128;
+        }
 
         .register-link {
-          font-size: 14px; /* 원하는 글씨 크기로 설정 */
-          font-family: "Arial", sans-serif; /* 원하는 글꼴로 설정 */
+            font-size: 14px;
+            font-family: "Arial", sans-serif;
+        }
+        .register-link a {
+            color: #00e5b4 !important;
         }
 
-        
         #login-button {
-            width: 310px; /* 원하는 버튼의 너비로 설정 */           
-        }
-
-        .btn-primary:focus {
-            outline: none;
-            box-shadow: 0 0 0 0.45rem rgba(20, 203, 216, 0.87);
-          }
-
-        .form-outline {
-        position: relative;
-        }
-
-        .form-outline input {
-            border: none;
-            border-bottom: 1px solid #ced4da; /* 아래 밑줄 스타일을 설정 */
-            border-radius: 13;
-            padding: 7px 8px;
             width: 100%;
+            background-color: #00e5b4 !important;
+            border-color: #00e5b4 !important;
+            color: #0d1117 !important;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        #login-button:hover {
+            background-color: #00b894 !important;
+            border-color: #00b894 !important;
+        }
+        #login-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 0.25rem rgba(0, 229, 180, 0.35);
         }
 
+        /* 다크 인풋 */
+        .form-outline { position: relative; }
+        .form-outline input {
+            background-color: #0d1117 !important;
+            border: 1px solid #30363d !important;
+            border-radius: 8px;
+            padding: 10px 12px;
+            width: 100%;
+            color: #e6edf3 !important;
+        }
+        .form-outline input::placeholder { color: #484f58; }
         .form-outline input:focus {
             outline: none;
-            border-color: #80bdff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            border-color: #00e5b4 !important;
+            box-shadow: 0 0 0 0.2rem rgba(0, 229, 180, 0.2);
         }
-
         .form-outline label {
             position: absolute;
             top: 0;
             left: 0;
             font-size: 0.875rem;
+            color: #8b949e;
             transition: transform 0.2s ease-out, font-size 0.2s ease-out;
         }
-
         .form-outline input:focus + label,
         .form-outline input:not(:placeholder-shown) + label {
-            transform: translateY(-35px) scale(0.85); /* 아래로 이동하여 축소되는 효과 적용 */
+            transform: translateY(-35px) scale(0.85);
             color: #6c757d;
         }
 
+        /* form-floating 다크 */
+        .form-floating > .form-control {
+            background-color: #0d1117 !important;
+            border-color: #30363d !important;
+            color: #e6edf3 !important;
+        }
+        .form-floating > label { color: #8b949e; }
+        .form-floating > .form-control:focus,
+        .form-floating > .form-control:not(:placeholder-shown) {
+            background-color: #0d1117 !important;
+        }
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: #8b949e;
+        }
+
         .divider {
-        border-top: 1.7px solid #757571;
-        margin: 10px;
-        width: 300px;
-    }
+            border-top: 1px solid #30363d;
+            margin: 12px 0;
+            width: 100%;
+        }
 
-
-
-      </style>
-
+        /* 소셜 로그인 버튼 영역 */
+        .social-login-btn {
+            display: block;
+            background-color: #1c2128;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            transition: border-color 0.2s;
+        }
+        .social-login-btn:hover {
+            border-color: #8b949e;
+        }
+        .social-login-btn img {
+            width: 190px;
+            height: 45px;
+            object-fit: contain;
+        }
+    </style>
 </head>
 <body>
         <!--////////// Header Start ////////////-->
@@ -93,76 +142,59 @@
                     <header>
                         <!-- <h1>로그인</h1> -->
                     </header>
-                    <div id="content"> 
-                        <c:if test="${sessionScope.mvo eq null}"> <!--세션에 저장된 mvo가 없을때-->     
-                            
+                    <div id="content">
+                        <c:if test="${sessionScope.mvo eq null}">
 
-                                <!--부트스트랩 추가-->
-                                <div class="d-flex justify-content-center align-items-center mt-5"> <!-- 가운데 정렬을 위한 d-flex와 justify-content-center 클래스 추가 -->
-                                <div class="card shadow p-4 mb-3 mt-3 bg-body rounded" style="width: 25rem;" >
+                                <div class="d-flex justify-content-center align-items-center mt-5">
+                                <div class="card shadow p-4 mb-3 mt-3 rounded" style="width: 25rem; background-color:#161b22; border:1px solid #30363d;" >
                                     <div class="card-body">
-
-
 
                                     <!-- 개인 로그인과 사업자 로그인 탭 -->
                                     <ul class="nav nav-pills nav-justified mb-4" id="ex1" role="tablist">
-                                        
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link active" id="tab-personal" data-mdb-toggle="pill" href="#pills-personal" role="tab"
-                                            aria-controls="pills-personal" aria-selected="true" >개인 로그인</a>
+                                            aria-controls="pills-personal" aria-selected="true">개인 로그인</a>
                                         </li>
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link" id="tab-business" data-mdb-toggle="pill" href="#pills-business" role="tab"
-                                            aria-controls="pills-business" aria-selected="false" >사업자 로그인</a>
+                                            aria-controls="pills-business" aria-selected="false">사업자 로그인</a>
                                         </li>
                                     </ul>
 
                     <div class="tab-content">
-                           
+
                                 <!-- 개인 로그인 내용 -->
                               <div class="tab-pane fade show active" id="pills-personal" role="tabpanel" aria-labelledby="tab-personal">
                                 <form action="login" method="post" name="frm">
                                     <input type="hidden" value="0" name="m_class" id="m_class1"/>
-                                    
-                                    <!-- Email input -->
 
-                                    <div class="form-outline  mb-4 form-floating mb-3">
-                                        <!-- <label class="form-label" for="m_email">Email</label> -->
-                                        <input type="text" id="m_email" name="m_email" class="form-control form-outline" placeholder="Email"/>
-                                        <label for="m_email" class="form-label text-secondary fs-6">Email</label>
-                                    </div>
-
-                                    <!-- Password input -->
                                     <div class="form-outline mb-4 form-floating mb-3">
-                                        <!-- <label class="form-label" for="m_pw">Password</label> -->
+                                        <input type="text" id="m_email" name="m_email" class="form-control form-outline" placeholder="Email"/>
+                                        <label for="m_email" class="form-label fs-6">Email</label>
+                                    </div>
+
+                                    <div class="form-outline mb-4 form-floating mb-3">
                                         <input type="password" id="m_pw" name="m_pw" class="form-control form-outline" placeholder="Password"/>
-                                        <label for="m_pw" class="form-label text-secondary fs-6">Password</label>
+                                        <label for="m_pw" class="form-label fs-6">Password</label>
                                     </div>
 
-                                    <!-- Login button -->
                                     <div class="text-center">
-                                        <button type="button" class="btn btn-primary btn-block mb-4 text-center" id="login-button" onclick="exe(this.form)"> <i class="fa fa-sign-in me-2" aria-hidden="true"></i>로그인</button>
+                                        <button type="button" class="btn btn-primary btn-block mb-4 text-center" id="login-button" onclick="exe(this.form)"><i class="fa fa-sign-in me-2" aria-hidden="true"></i>로그인</button>
                                     </div>
 
-                                        <!--회원가입-->
-                                        <!-- <button type="button" class="btn btn-info btn-block mb-4 " onclick="location.href='join'" >회원가입</button>   -->
                                         <hr class="divider"/>
-                                        
+
                                         <div class="text-center register-link">
-                                            <p>계정이 없으신가요? <a href="join">회원가입</a></p>
+                                            <p style="color:#8b949e;">계정이 없으신가요? <a href="join">회원가입</a></p>
                                         </div>
-                                    
-                                    <div class="text-center">        
-                                    <p>
-                                        <a id="kakao-login" href="https://kauth.kakao.com/oauth/authorize?client_id=01fcedff33d5020339523392547b5f9b&redirect_uri=http://localhost:8080/kakao/login&response_type=code">
-                                            <img src="../images/kakao_login_large.png" style="width: 190px; height: 45px;" />
+
+                                    <div class="text-center d-flex flex-column align-items-center gap-2">
+                                        <a id="kakao-login" class="social-login-btn" href="https://kauth.kakao.com/oauth/authorize?client_id=01fcedff33d5020339523392547b5f9b&redirect_uri=http://localhost:8080/kakao/login&response_type=code">
+                                            <img src="../images/kakao_login_large.png" />
                                         </a>
-                                    </p>
-                                    <p>
-                                        <a id="naver-login" href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=DEfYVqVL7Po51QB3sjNx&state=STATE_STRING&redirect_uri=http://localhost:8080/naver/login">
-                                            <img src="../images/naver_login.png" style="width: 188px; height: 45px;"/>
+                                        <a id="naver-login" class="social-login-btn" href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=DEfYVqVL7Po51QB3sjNx&state=STATE_STRING&redirect_uri=http://localhost:8080/naver/login">
+                                            <img src="../images/naver_login.png" />
                                         </a>
-                                    </p>
                                     </div>
 
                                 </form>
@@ -173,31 +205,26 @@
                         <div class="tab-pane fade" id="pills-business" role="tabpanel" aria-labelledby="tab-business">
                             <form action="login" method="post" name="frm">
                                 <input type="hidden" value="1" name="m_class" id="m_class2"/>
-                            <!-- Email input -->
                             <div class="form-outline mb-4 form-floating mb-3">
                                 <input type="text" id="m_email" name="m_email" class="form-control form-outline" placeholder="Email" />
-                                <label for="m_email" class="form-label text-secondary fs-6">Email</label>
+                                <label for="m_email" class="form-label fs-6">Email</label>
                             </div>
 
-                            <!-- Password input -->
                             <div class="form-outline mb-4 form-floating mb-3">
                                 <input type="password" id="m_pw" name="m_pw" class="form-control form-outline" placeholder="Password" />
-                                <label for="m_pw" class="form-label text-secondary fs-6">Password</label>
+                                <label for="m_pw" class="form-label fs-6">Password</label>
                             </div>
 
-                            <!-- Login button -->
                             <div class="text-center">
-                                <button type="button" class="btn btn-primary btn-block mb-4 text-center"  id="login-button" onclick="exe(this.form)"><i class="fa fa-sign-in me-2" aria-hidden="true"></i>로그인</button>         
+                                <button type="button" class="btn btn-primary btn-block mb-4 text-center" id="login-button" onclick="exe(this.form)"><i class="fa fa-sign-in me-2" aria-hidden="true"></i>로그인</button>
 
                             <hr class="divider">
 
                                 <div class="text-center register-link">
-                                    <p>계정이 없으신가요? <a href="join">회원가입</a></p>
+                                    <p style="color:#8b949e;">계정이 없으신가요? <a href="join">회원가입</a></p>
                                 </div>
                              </div>
 
-                            
-                            </p>
                         </form>
                         </div>
                     </div>
@@ -206,32 +233,16 @@
             </div>
         </div>
 
-       
         </c:if>
 
         <div class="text-center" id="error-message"></div>
 
 
-                  
-            
                             <!--Jquery Plugins, main Jquery	-->
                             <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
                             <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
                            <script>
-
-                                // $(function(){
-                                //       //현재문서에서 id가 chk인 요소를 검색한다
-                                //       let v1 = $("#chk").val();  
-                                //     //  console.log(v1);
-                                //     if(v1 != undefined){
-                                //        // console.log(v1);
-                                //        $( "#message" ).dialog();
-                                //     }
-                                // });
-                                
-
-
                                 function exe(frm) {
                                     if ($(frm.m_email).val() == "") {
                                     alert("이메일을 입력하세요");
@@ -264,22 +275,21 @@
                                     alert("로그인 중에 오류가 발생했습니다");
                                     });
                                 }
-               
+
 
                                 $(document).ready(function() {
                                     //개인로그인 탭 눌려졌을때
-                                    $("#tab-personal").on("click", function() { 
+                                    $("#tab-personal").on("click", function() {
 
-                                    $(this).addClass("active"); // 개인 로그인 탭을 활성화 상태로 설정
-                                    $("#tab-business").removeClass("active"); // 사업자 로그인 탭의 활성화 상태 제거
-                                    $("#pills-personal").addClass("show active"); // 개인 로그인 내용을 보여줌
-                                    $("#pills-business").removeClass("show active"); // 사업자 로그인 내용을 숨김
+                                    $(this).addClass("active");
+                                    $("#tab-business").removeClass("active");
+                                    $("#pills-personal").addClass("show active");
+                                    $("#pills-business").removeClass("show active");
 
-                                    $("#m_class1").val("0"); // 개인 로그인 선택 시 m_class 값을 0으로 설정
+                                    $("#m_class1").val("0");
                                     $("#kakao-login").show();
                                     $("#naver-login").show();
 
-                                      // 엔터키 쳤을때 로그인 되게 하는 함수 추가
                                       handlePersonalLogin();
 
                                     });
@@ -287,16 +297,15 @@
                                     //사업자로그인 탭 눌려졌을때
                                     $("#tab-business").on("click", function() {
 
-                                        $(this).addClass("active"); // 사업자 로그인 탭을 활성화 상태로 설정
-                                        $("#tab-personal").removeClass("active"); // 개인 로그인 탭의 활성화 상태 제거
-                                        $("#pills-business").addClass("show active"); // 사업자 로그인 내용을 보여줌
-                                        $("#pills-personal").removeClass("show active"); // 개인 로그인 내용을 숨김
+                                        $(this).addClass("active");
+                                        $("#tab-personal").removeClass("active");
+                                        $("#pills-business").addClass("show active");
+                                        $("#pills-personal").removeClass("show active");
 
-                                    $("#m_class2").val("1"); // 사업자 로그인 선택 시 m_class 값을 1으로 설정
+                                    $("#m_class2").val("1");
                                     $("#kakao-login").hide();
                                     $("#naver-login").hide();
 
-                                      // 엔터키 쳤을때 로그인 되게 하는 함수 추가
                                       handleBusinessLogin();
 
                                     });

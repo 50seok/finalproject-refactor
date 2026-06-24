@@ -8,24 +8,28 @@ pageEncoding="UTF-8"%>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>공지사항</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-<link href="../../../css/page.css" rel="stylesheet">
-<link href="../../../css/ramg.css" rel="stylesheet">
+<link href="../../../css/ramg-dark.css" rel="stylesheet">
+<style>
+  body { background-color: #0d1117 !important; }
+  .search-bar .form-select,
+  .search-bar .form-control { background-color: #1c2128 !important; border-color: #30363d !important; color: #e6edf3 !important; }
+  .search-bar .form-select option { background-color: #1c2128; }
+</style>
 </head>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 <body>
 <jsp:include page="../main/mainH.jsp"></jsp:include>
 <main>
-    <div class="container">
-        <div class="m-5">
-            <h1 style="text-align: center; font-weight: bold; color: rgb(35, 55, 109);">공지사항</h1>
+    <div class="container section-pad-sm">
+        <div class="mb-4">
+            <h1 class="page-title">공지사항</h1>
         </div>
         <form action="">
-            <div style="height: 60px; float: right;">
+            <div class="search-bar d-flex justify-content-end align-items-center gap-2 mb-3" style="flex-wrap:wrap;">
                 <c:if test="${sessionScope.mvo.m_class == 1 || sessionScope.mvo.m_class == 2}">
-                    <span style="float: left; margin-right: 5px;">
-                        <select name="category" class="form-select" aria-label="Default select example">
-                            <c:if test="${param.category == 0}">
+                    <select name="category" class="form-select" style="width:120px;" aria-label="카테고리">
+                        <c:if test="${param.category == 0}">
                             <option value="3">전체</option>
                             <option value="0" selected>일반공지</option>
                             <option value="1">사업자공지</option>
@@ -45,10 +49,9 @@ pageEncoding="UTF-8"%>
                             <option value="0">일반공지</option>
                             <option value="1">사업자공지</option>
                         </c:if>
-                        </select>
-                    </span>
+                    </select>
                 </c:if>
-                <select name="searchType" class="form-select" aria-label="Default select example" style="width: 130px; display: inline-block;">
+                <select name="searchType" class="form-select" style="width:130px;" aria-label="검색 유형">
                     <c:if test="${param.searchType == 0}">
                         <option value="0" selected>제목</option>
                         <option value="1">내용</option>
@@ -70,8 +73,8 @@ pageEncoding="UTF-8"%>
                         <option value="2">제목+내용</option>
                     </c:if>
                 </select>
-                <input type="text" name="searchValue" value="${param.searchValue}"class="form-control" style="width: 200px; display: inline-block;">
-                <button type="submit" class="btn btn-outline-info">검색</button>
+                <input type="text" name="searchValue" value="${param.searchValue}" class="form-control" style="width:200px;">
+                <button type="submit" class="neon-outline-btn">검색</button>
             </div>
         </form>
 
@@ -93,7 +96,7 @@ pageEncoding="UTF-8"%>
             <tbody>
                 <c:if test="${ar == null}">
                 <tr>
-                    <td colspan="4">검색 결과가 없습니다.</td>
+                    <td colspan="4" style="color:#8b949e;">검색 결과가 없습니다.</td>
                 </tr>
                 </c:if>
                 <c:forEach var="vo" items="${ar}" varStatus="st">
@@ -101,9 +104,9 @@ pageEncoding="UTF-8"%>
                         <td>${totalRecord - ((nowPage-1)*blockList+st.index) }</td>
                         <td>
                             <c:if test="${vo.b_to == 1}">
-                                <span style="font-size: small; color: rgb(179, 179, 179);">[사업자]</span>
+                                <span style="font-size: small; color: #8b949e;">[사업자]</span>
                             </c:if>
-                            <a href="javascript:sub('${vo.b_idx}')">${vo.b_title}</a>
+                            <a href="javascript:sub('${vo.b_idx}')" style="color:#e6edf3 !important;">${vo.b_title}</a>
                             <c:if test="${vo.b_filename != null}">
                                 <img src="../images/link.png" style="width: 14px;">
                             </c:if>
@@ -114,7 +117,7 @@ pageEncoding="UTF-8"%>
                 </c:forEach>
             </tbody>
         </table>
-        <div style="height: 80px;" >
+        <div style="height: 80px;">
             ${pageCode}
         </div>
     </div>
